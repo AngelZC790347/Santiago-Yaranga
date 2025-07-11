@@ -6,26 +6,28 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@remotion/cli": "4.0.323",
-    "@remotion/zod-types": "4.0.323",
     "@remotion/animation-utils": "4.0.323",
+    "@remotion/cli": "4.0.323",
+    "@remotion/google-fonts": "4.0.323",
     "@remotion/layout-utils": "4.0.323",
     "@remotion/media-utils": "4.0.323",
+    "@remotion/transitions": "4.0.323",
+    "@remotion/zod-types": "4.0.323",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "remotion": "4.0.323",
-    "zod": "3.22.3",
-    "@remotion/tailwind-v4": "4.0.323",
-    "tailwindcss": "4.0.0"
+    "zod": "3.22.3"
   },
   "devDependencies": {
+    "@remotion/captions": "4.0.323",
     "@remotion/eslint-config-flat": "4.0.323",
     "@remotion/install-whisper-cpp": "4.0.323",
-    "@remotion/captions": "4.0.323",
+    "@remotion/tailwind-v4": "^4.0.323",
     "@types/react": "19.0.0",
     "@types/web": "0.0.166",
     "eslint": "9.19.0",
     "prettier": "3.3.3",
+    "tailwindcss": "^4.1.11",
     "typescript": "5.8.2"
   },
   "scripts": {

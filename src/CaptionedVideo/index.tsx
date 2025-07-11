@@ -6,9 +6,12 @@ import {
   continueRender,
   delayRender,
   getStaticFiles,
+  Img,
   OffthreadVideo,
   Sequence,
+  staticFile,
   useVideoConfig,
+  Audio,
   watchStaticFile,
 } from "remotion";
 import { z } from "zod";
@@ -17,7 +20,11 @@ import { getVideoMetadata } from "@remotion/media-utils";
 import { loadFont } from "../load-font";
 import { NoCaptionFile } from "./NoCaptionFile";
 import { Caption, createTikTokStyleCaptions } from "@remotion/captions";
-
+import {TransitionSeries, linearTiming} from "@remotion/transitions"
+import {flip} from "@remotion/transitions/flip"
+import { Caratula } from "../Slides/Caratula";
+import { Lugar } from "../Slides/Lugar";
+import { Artistas } from "../Slides/Artistas";
 export type SubtitleProp = {
   startInSeconds: number;
   text: string;
@@ -35,7 +42,7 @@ export const calculateCaptionedVideoMetadata: CalculateMetadataFunction<
 
   return {
     fps,
-    durationInFrames: Math.floor(metadata.durationInSeconds * fps),
+    durationInFrames: 1300,
   };
 };
 
@@ -98,38 +105,31 @@ export const CaptionedVideo: React.FC<{
   }, [subtitles]);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "white" }}>
+    <AbsoluteFill style={{background:"#fafafa"}}>
       <AbsoluteFill>
-        <OffthreadVideo
-          style={{
-            objectFit: "cover",
-          }}
-          src={src}
-        />
-      </AbsoluteFill>
-      {pages.map((page, index) => {
-        const nextPage = pages[index + 1] ?? null;
-        const subtitleStartFrame = (page.startMs / 1000) * fps;
-        const subtitleEndFrame = Math.min(
-          nextPage ? (nextPage.startMs / 1000) * fps : Infinity,
-          subtitleStartFrame + SWITCH_CAPTIONS_EVERY_MS,
-        );
-        const durationInFrames = subtitleEndFrame - subtitleStartFrame;
-        if (durationInFrames <= 0) {
-          return null;
-        }
-
-        return (
-          <Sequence
-            key={index}
-            from={subtitleStartFrame}
-            durationInFrames={durationInFrames}
-          >
-            <SubtitlePage key={index} page={page} />;
-          </Sequence>
-        );
-      })}
-      {getFileExists(subtitlesFile) ? null : <NoCaptionFile />}
+        <TransitionSeries>
+          <TransitionSeries.Sequence durationInFrames={350}>
+            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize:'cover',backgroundRepeat:'no-repeat',backgroundPosition: '-80px center' }}>
+                <Caratula/>
+            </AbsoluteFill>            
+          </TransitionSeries.Sequence>
+          <TransitionSeries.Transition presentation={flip()} timing={linearTiming({ durationInFrames: 30 })}/>
+          <TransitionSeries.Sequence durationInFrames={350}>
+            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize:'cover',backgroundRepeat:'no-repeat',backgroundPosition: '-80px center' }}>
+                <Lugar/>
+            </AbsoluteFill>            
+          </TransitionSeries.Sequence>
+          <TransitionSeries.Transition presentation={flip()} timing={linearTiming({ durationInFrames: 30 })}/>
+          <TransitionSeries.Sequence durationInFrames={350}>
+            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize:'cover',backgroundRepeat:'no-repeat',backgroundPosition: '-80px center' }}>
+                <Artistas />
+            </AbsoluteFill>            
+          </TransitionSeries.Sequence>
+        </TransitionSeries>
+      </AbsoluteFill>    
+      <AbsoluteFill>
+        <Audio src={staticFile('tono.mp3')}/>
+        </AbsoluteFill>        
     </AbsoluteFill>
   );
 };

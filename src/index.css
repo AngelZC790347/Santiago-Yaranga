@@ -1,1 +1,9 @@
 @import "tailwindcss";
+.santiago-heading {
+            
+    text-transform: none; /* The original text is not uppercase, so override the uppercase class */
+    letter-spacing: -1px; /* Slightly condense letter spacing if needed */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);     
+    -webkit-text-stroke: 1px #8B008B; /* Darker pink/purple for the outline */
+    text-stroke: 1px #8B008B;    
+}
