@@ -20,11 +20,12 @@ import { getVideoMetadata } from "@remotion/media-utils";
 import { loadFont } from "../load-font";
 import { NoCaptionFile } from "./NoCaptionFile";
 import { Caption, createTikTokStyleCaptions } from "@remotion/captions";
-import {TransitionSeries, linearTiming} from "@remotion/transitions"
-import {flip} from "@remotion/transitions/flip"
+import { TransitionSeries, linearTiming } from "@remotion/transitions"
+import { flip } from "@remotion/transitions/flip"
 import { Caratula } from "../Slides/Caratula";
 import { Lugar } from "../Slides/Lugar";
 import { Artistas } from "../Slides/Artistas";
+import { Programa } from "../Slides/Programa";
 export type SubtitleProp = {
   startInSeconds: number;
   text: string;
@@ -38,8 +39,6 @@ export const calculateCaptionedVideoMetadata: CalculateMetadataFunction<
   z.infer<typeof captionedVideoSchema>
 > = async ({ props }) => {
   const fps = 30;
-  const metadata = await getVideoMetadata(props.src);
-
   return {
     fps,
     durationInFrames: 1300,
@@ -60,76 +59,46 @@ const getFileExists = (file: string) => {
 // - 200 to only display 1 word at a time
 const SWITCH_CAPTIONS_EVERY_MS = 1200;
 
-export const CaptionedVideo: React.FC<{
-  src: string;
-}> = ({ src }) => {
+export const CaptionedVideo: React.FC<{}> = () => {
   const [subtitles, setSubtitles] = useState<Caption[]>([]);
-  const [handle] = useState(() => delayRender());
+
   const { fps } = useVideoConfig();
 
-  const subtitlesFile = src
-    .replace(/.mp4$/, ".json")
-    .replace(/.mkv$/, ".json")
-    .replace(/.mov$/, ".json")
-    .replace(/.webm$/, ".json");
 
-  const fetchSubtitles = useCallback(async () => {
-    try {
-      await loadFont();
-      const res = await fetch(subtitlesFile);
-      const data = (await res.json()) as Caption[];
-      setSubtitles(data);
-      continueRender(handle);
-    } catch (e) {
-      cancelRender(e);
-    }
-  }, [handle, subtitlesFile]);
-
-  useEffect(() => {
-    fetchSubtitles();
-
-    const c = watchStaticFile(subtitlesFile, () => {
-      fetchSubtitles();
-    });
-
-    return () => {
-      c.cancel();
-    };
-  }, [fetchSubtitles, src, subtitlesFile]);
-
-  const { pages } = useMemo(() => {
-    return createTikTokStyleCaptions({
-      combineTokensWithinMilliseconds: SWITCH_CAPTIONS_EVERY_MS,
-      captions: subtitles ?? [],
-    });
-  }, [subtitles]);
 
   return (
-    <AbsoluteFill style={{background:"#fafafa"}}>
+    <AbsoluteFill style={{ background: "#fafafa" }}>
       <AbsoluteFill>
         <TransitionSeries>
           <TransitionSeries.Sequence durationInFrames={350}>
-            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize:'cover',backgroundRepeat:'no-repeat',backgroundPosition: '-80px center' }}>
-                <Caratula/>
-            </AbsoluteFill>            
+            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: '-80px center' }}>
+              <Caratula />
+            </AbsoluteFill>
           </TransitionSeries.Sequence>
-          <TransitionSeries.Transition presentation={flip()} timing={linearTiming({ durationInFrames: 30 })}/>
+          <TransitionSeries.Transition presentation={flip()} timing={linearTiming({ durationInFrames: 30 })} />
           <TransitionSeries.Sequence durationInFrames={350}>
-            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize:'cover',backgroundRepeat:'no-repeat',backgroundPosition: '-80px center' }}>
-                <Lugar/>
-            </AbsoluteFill>            
+            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: '-80px center' }}>
+              <Lugar />
+            </AbsoluteFill>
           </TransitionSeries.Sequence>
-          <TransitionSeries.Transition presentation={flip()} timing={linearTiming({ durationInFrames: 30 })}/>
+          <TransitionSeries.Transition presentation={flip()} timing={linearTiming({ durationInFrames: 30 })} />
           <TransitionSeries.Sequence durationInFrames={350}>
-            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize:'cover',backgroundRepeat:'no-repeat',backgroundPosition: '-80px center' }}>
-                <Artistas />
-            </AbsoluteFill>            
+            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: '-80px center' }}>
+              <Artistas />
+            </AbsoluteFill>
           </TransitionSeries.Sequence>
+          <TransitionSeries.Transition presentation={flip()} timing={linearTiming({ durationInFrames: 30 })} />
+          <TransitionSeries.Sequence durationInFrames={350}>
+            <AbsoluteFill style={{ backgroundImage: `url(${staticFile('fondo.jpg')})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: '-80px center' }}>
+              <Programa />
+            </AbsoluteFill>
+          </TransitionSeries.Sequence>
+          <TransitionSeries.Transition presentation={flip()} timing={linearTiming({ durationInFrames: 30 })} />
         </TransitionSeries>
-      </AbsoluteFill>    
+      </AbsoluteFill>
       <AbsoluteFill>
-        <Audio src={staticFile('tono.mp3')}/>
-        </AbsoluteFill>        
+        <Audio src={staticFile('tono.mp3')} />
+      </AbsoluteFill>
     </AbsoluteFill>
   );
 };

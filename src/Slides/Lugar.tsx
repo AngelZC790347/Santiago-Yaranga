@@ -4,8 +4,8 @@ import {loadFont} from '@remotion/google-fonts/DancingScript'
 export const Lugar:React.FC<{}> = () =>{
     const {fontFamily} = loadFont()
     return (
-        <AbsoluteFill className="top-1/5 flex flex- col gap-20">
-            <header  style={{fontFamily}}>
+        <AbsoluteFill className="top-1/8 flex flex- col gap-20">
+            <header  style={{fontFamily }}>
                 <div className="flex items-center mx-auto w-fit gap-10">
                   <h1                    
                     className="text-center santiago-heading border-b-solid border-b-8 text-[#DD4C8C] text-9xl uppercase normal-case ">
